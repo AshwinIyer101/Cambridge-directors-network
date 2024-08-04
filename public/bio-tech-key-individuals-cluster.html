@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 950px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Robert Giles Tansley", "label": "Dr Robert Giles Tansley", "shape": "dot", "x": 1050.0, "y": 500.0}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Peter Stephen Keen", "label": "Mr Peter Stephen Keen", "shape": "dot", "x": 1035.174678818903, "y": 626.8387289083421}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Christopher John Torrance", "label": "Dr Christopher John Torrance", "shape": "dot", "x": 991.4979521778768, "y": 746.8395491102542}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Timothy James Rink", "label": "Dr Timothy James Rink", "shape": "dot", "x": 921.3244437154378, "y": 853.5331853275966}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Michael Leith Anstey", "label": "Dr Michael Leith Anstey", "shape": "dot", "x": 828.4372254365323, "y": 941.1677560152741}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Robbie Woodman", "label": "Dr Robbie Woodman", "shape": "dot", "x": 717.8438713215363, "y": 1005.0188587841508}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Catherine Susan Beech", "label": "Dr Catherine Susan Beech", "shape": "dot", "x": 595.5064977168117, "y": 1041.6442641567144}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Graziano Seghezzi", "label": "Mr Graziano Seghezzi", "shape": "dot", "x": 468.02034409923834, "y": 1049.0694870491975}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Tim Rea", "label": "Mr Tim Rea", "shape": "dot", "x": 342.25822200890036, "y": 1026.8942317735189}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Jason Mellad", "label": "Dr Jason Mellad", "shape": "dot", "x": 225.0000000000001, "y": 976.3139720814413}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Hermann Maria Hauser", "label": "Mr Hermann Maria Hauser", "shape": "dot", "x": 122.5670991721966, "y": 900.0555028651769}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Peter Fellner", "label": "Mr Peter Fellner", "shape": "dot", "x": 40.48170372288507, "y": 802.2299379389434}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Allan Bradley", "label": "Dr Allan Bradley", "shape": "dot", "x": -16.830941432249574, "y": 688.1110788291179}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Martin Patrick Murphy", "label": "Mr Martin Patrick Murphy", "shape": "dot", "x": -46.28109675806866, "y": 563.8511027688767}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr James Alexander Harrison", "label": "Mr James Alexander Harrison", "shape": "dot", "x": -46.28109675806866, "y": 436.14889723112344}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Daniel Rowland Cowell", "label": "Mr Daniel Rowland Cowell", "shape": "dot", "x": -16.830941432249688, "y": 311.8889211708822}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Geraldine Anne Rodgers", "label": "Dr Geraldine Anne Rodgers", "shape": "dot", "x": 40.48170372288496, "y": 197.7700620610567}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Keith Powell", "label": "Dr Keith Powell", "shape": "dot", "x": 122.56709917219649, "y": 99.94449713482328}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Keith Stuart Blundy", "label": "Dr Keith Stuart Blundy", "shape": "dot", "x": 224.99999999999977, "y": 23.68602791855892}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Alastair Hugh Lowell Kilgour", "label": "Mr Alastair Hugh Lowell Kilgour", "shape": "dot", "x": 342.25822200890013, "y": -26.894231773518868}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Prof Stephen Philip Jackson", "label": "Prof Stephen Philip Jackson", "shape": "dot", "x": 468.02034409923806, "y": -49.069487049197505}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Ms Alice Vanessa Ilse Newcombe-Ellis", "label": "Ms Alice Vanessa Ilse Newcombe-Ellis", "shape": "dot", "x": 595.5064977168115, "y": -41.644264156714485}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Christian Billy Jung", "label": "Dr Christian Billy Jung", "shape": "dot", "x": 717.8438713215361, "y": -5.01885878415078}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Paul Bernard Harper", "label": "Mr Paul Bernard Harper", "shape": "dot", "x": 828.4372254365322, "y": 58.832243984725835}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Ernesto Giorgio Reggiani", "label": "Ernesto Giorgio Reggiani", "shape": "dot", "x": 921.3244437154378, "y": 146.46681467240325}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Alastair James Riddell", "label": "Dr Alastair James Riddell", "shape": "dot", "x": 991.4979521778766, "y": 253.16045088974565}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Sunil Rajen Shah", "label": "Mr Sunil Rajen Shah", "shape": "dot", "x": 1035.174678818903, "y": 373.16127109165774}]);
+                  edges = new vis.DataSet([{"color": "black", "from": "Dr Robert Giles Tansley", "to": "Mr Peter Stephen Keen", "width": 2}, {"color": "red", "from": "Dr Robert Giles Tansley", "to": "Dr Michael Leith Anstey", "width": 2}, {"color": "black", "from": "Dr Robert Giles Tansley", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "orange", "from": "Dr Robert Giles Tansley", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "orange", "from": "Dr Robert Giles Tansley", "to": "Dr Robbie Woodman", "width": 2}, {"color": "orange", "from": "Dr Robert Giles Tansley", "to": "Dr Keith Stuart Blundy", "width": 2}, {"color": "orange", "from": "Dr Robert Giles Tansley", "to": "Dr Allan Bradley", "width": 2}, {"color": "black", "from": "Dr Robert Giles Tansley", "to": "Mr Graziano Seghezzi", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Dr Michael Leith Anstey", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Dr Christopher John Torrance", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Mr Martin Patrick Murphy", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Mr Daniel Rowland Cowell", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Dr Geraldine Anne Rodgers", "width": 2}, {"color": "black", "from": "Mr Peter Stephen Keen", "to": "Dr Catherine Susan Beech", "width": 2}, {"color": "orange", "from": "Dr Christopher John Torrance", "to": "Mr Tim Rea", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Dr Jason Mellad", "width": 2}, {"color": "orange", "from": "Dr Christopher John Torrance", "to": "Dr Catherine Susan Beech", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Mr Sunil Rajen Shah", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Mr Martin Patrick Murphy", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Mr Daniel Rowland Cowell", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Dr Geraldine Anne Rodgers", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Dr Christopher John Torrance", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "black", "from": "Dr Timothy James Rink", "to": "Mr Peter Fellner", "width": 2}, {"color": "black", "from": "Dr Timothy James Rink", "to": "Dr Jason Mellad", "width": 2}, {"color": "black", "from": "Dr Timothy James Rink", "to": "Mr Martin Patrick Murphy", "width": 2}, {"color": "black", "from": "Dr Timothy James Rink", "to": "Ms Alice Vanessa Ilse Newcombe-Ellis", "width": 2}, {"color": "black", "from": "Dr Timothy James Rink", "to": "Dr Allan Bradley", "width": 2}, {"color": "black", "from": "Dr Timothy James Rink", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Dr Michael Leith Anstey", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Dr Michael Leith Anstey", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "orange", "from": "Dr Michael Leith Anstey", "to": "Dr Robbie Woodman", "width": 2}, {"color": "orange", "from": "Dr Michael Leith Anstey", "to": "Dr Keith Stuart Blundy", "width": 2}, {"color": "black", "from": "Dr Robbie Woodman", "to": "Dr Catherine Susan Beech", "width": 2}, {"color": "orange", "from": "Dr Robbie Woodman", "to": "Mr Graziano Seghezzi", "width": 2}, {"color": "black", "from": "Dr Robbie Woodman", "to": "Dr Christian Billy Jung", "width": 2}, {"color": "red", "from": "Dr Robbie Woodman", "to": "Dr Keith Stuart Blundy", "width": 2}, {"color": "black", "from": "Dr Robbie Woodman", "to": "Prof Stephen Philip Jackson", "width": 2}, {"color": "black", "from": "Dr Catherine Susan Beech", "to": "Mr Graziano Seghezzi", "width": 2}, {"color": "black", "from": "Dr Catherine Susan Beech", "to": "Mr Sunil Rajen Shah", "width": 2}, {"color": "black", "from": "Dr Catherine Susan Beech", "to": "Mr Tim Rea", "width": 2}, {"color": "black", "from": "Dr Catherine Susan Beech", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Dr Catherine Susan Beech", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "black", "from": "Mr Graziano Seghezzi", "to": "Dr Keith Stuart Blundy", "width": 2}, {"color": "black", "from": "Mr Graziano Seghezzi", "to": "Prof Stephen Philip Jackson", "width": 2}, {"color": "black", "from": "Mr Graziano Seghezzi", "to": "Dr Allan Bradley", "width": 2}, {"color": "black", "from": "Mr Tim Rea", "to": "Ernesto Giorgio Reggiani", "width": 2}, {"color": "black", "from": "Mr Tim Rea", "to": "Dr Alastair James Riddell", "width": 2}, {"color": "black", "from": "Mr Tim Rea", "to": "Dr Jason Mellad", "width": 2}, {"color": "black", "from": "Mr Tim Rea", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Mr Tim Rea", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "black", "from": "Dr Jason Mellad", "to": "Mr Martin Patrick Murphy", "width": 2}, {"color": "black", "from": "Dr Jason Mellad", "to": "Ms Alice Vanessa Ilse Newcombe-Ellis", "width": 2}, {"color": "orange", "from": "Mr Hermann Maria Hauser", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "black", "from": "Dr Allan Bradley", "to": "Mr Alastair Hugh Lowell Kilgour", "width": 2}, {"color": "black", "from": "Mr Martin Patrick Murphy", "to": "Ms Alice Vanessa Ilse Newcombe-Ellis", "width": 2}, {"color": "black", "from": "Mr Martin Patrick Murphy", "to": "Mr Daniel Rowland Cowell", "width": 2}, {"color": "black", "from": "Mr Martin Patrick Murphy", "to": "Dr Geraldine Anne Rodgers", "width": 2}, {"color": "black", "from": "Mr James Alexander Harrison", "to": "Dr Keith Powell", "width": 2}, {"color": "orange", "from": "Mr Daniel Rowland Cowell", "to": "Dr Geraldine Anne Rodgers", "width": 2}, {"color": "black", "from": "Dr Keith Stuart Blundy", "to": "Prof Stephen Philip Jackson", "width": 2}, {"color": "orange", "from": "Prof Stephen Philip Jackson", "to": "Ms Alice Vanessa Ilse Newcombe-Ellis", "width": 2}, {"color": "orange", "from": "Mr Paul Bernard Harper", "to": "Ernesto Giorgio Reggiani", "width": 2}, {"color": "orange", "from": "Mr Paul Bernard Harper", "to": "Dr Alastair James Riddell", "width": 2}, {"color": "red", "from": "Ernesto Giorgio Reggiani", "to": "Dr Alastair James Riddell", "width": 2}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"nodes": {"shape": "dot", "size": 20, "font": {"size": 15}}, "edges": {"smooth": false}, "physics": {"enabled": false}, "layout": {"hierarchical": {"enabled": false}, "improvedLayout": false}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

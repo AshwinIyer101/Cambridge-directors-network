@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 950px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+<div style="position: absolute; top: 10px; left: 10px; background-color: white; border: 1px solid black; padding: 10px; z-index: 999;">
+  <h4>Legend</h4>
+  <p><span style="background-color: gray; width: 10px; height: 10px; display: inline-block;"></span> 1 Company</p>
+  <p><span style="background-color: black; width: 10px; height: 10px; display: inline-block;"></span> 2 Companies</p>
+  <p><span style="background-color: blue; width: 10px; height: 10px; display: inline-block;"></span> 3 Companies</p>
+  <p><span style="background-color: orange; width: 10px; height: 10px; display: inline-block;"></span> 4 Companies</p>
+  <p><span style="background-color: red; width: 10px; height: 10px; display: inline-block;"></span> 5 Companies</p>
+  <p><span style="background-color: purple; width: 10px; height: 10px; display: inline-block;"></span> 6 Companies</p>
+  <p><span style="background-color: pink; width: 10px; height: 10px; display: inline-block;"></span> More than 6 Companies</p>
+</div>
+
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "gray", "id": "Mr David James Buckeridge", "label": "Mr David James Buckeridge", "shape": "dot", "title": "Companies: CYCLE GROUP HOLDINGS LIMITED \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Mr Antony George Cates", "label": "Mr Antony George Cates", "shape": "dot", "title": "Companies: CYCLE GROUP HOLDINGS LIMITED \u003cbr\u003eConnections: 4"}, {"color": "blue", "id": "Mr James Alexander Harrison", "label": "Mr James Alexander Harrison", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD, CYCLE GROUP HOLDINGS LIMITED, INTRACT PHARMA LIMITED \u003cbr\u003eConnections: 15"}, {"color": "black", "id": "Mr Duncan Charles McNaught Moore", "label": "Mr Duncan Charles McNaught Moore", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD, CYCLE GROUP HOLDINGS LIMITED \u003cbr\u003eConnections: 11"}, {"color": "black", "id": "Mr Ross George Reason", "label": "Mr Ross George Reason", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD, CYCLE GROUP HOLDINGS LIMITED \u003cbr\u003eConnections: 11"}, {"color": "black", "id": "Mr William John Robinson", "label": "Mr William John Robinson", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD, CYCLE GROUP HOLDINGS LIMITED \u003cbr\u003eConnections: 11"}, {"color": "gray", "id": "Dr Alejandra Bruna", "label": "Dr Alejandra Bruna", "shape": "dot", "title": "Companies: CYCLE GROUP HOLDINGS LIMITED \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Ms Sarah Jean Gowing", "label": "Ms Sarah Jean Gowing", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Mr Steve McCue", "label": "Mr Steve McCue", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Mr Antonio Benedetti", "label": "Mr Antonio Benedetti", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Mr Allen Lefkowitz", "label": "Mr Allen Lefkowitz", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Ms Denise Mary Moody", "label": "Ms Denise Mary Moody", "shape": "dot", "title": "Companies: CYCLE PHARMACEUTICALS LTD \u003cbr\u003eConnections: 4"}, {"color": "gray", "id": "Mr Thomas Edward Beckett", "label": "Mr Thomas Edward Beckett", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Frank Simon Bury", "label": "Mr Frank Simon Bury", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Ralph Stephen Harris", "label": "Mr Ralph Stephen Harris", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr Judith Mary Hills", "label": "Dr Judith Mary Hills", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Barry Kenneth Knight", "label": "Mr Barry Kenneth Knight", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "black", "id": "Mr Edward Littler", "label": "Mr Edward Littler", "shape": "dot", "title": "Companies: DOMAINEX LIMITED, DOMAINEX LIMITED \u003cbr\u003eConnections: 21"}, {"color": "gray", "id": "Dr Thomas Haydn Mander", "label": "Dr Thomas Haydn Mander", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Laurence Pearl", "label": "Laurence Pearl", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "blue", "id": "Dr Keith Powell", "label": "Dr Keith Powell", "shape": "dot", "title": "Companies: DOMAINEX LIMITED, DOMAINEX LIMITED, INTRACT PHARMA LIMITED \u003cbr\u003eConnections: 25"}, {"color": "gray", "id": "Mr Anthony David Brampton", "label": "Mr Anthony David Brampton", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr Susan Margaret Bright", "label": "Dr Susan Margaret Bright", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Christopher David Brown", "label": "Mr Christopher David Brown", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Ian Fergus Cameron", "label": "Mr Ian Fergus Cameron", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr David Anthony Jones", "label": "Dr David Anthony Jones", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "black", "id": "Dr Stephane Robert George Mery", "label": "Dr Stephane Robert George Mery", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD, DOMAINEX LIMITED \u003cbr\u003eConnections: 34"}, {"color": "gray", "id": "Professor Salvadore Enrique Moncada", "label": "Professor Salvadore Enrique Moncada", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Trevor Robert Perrior", "label": "Mr Trevor Robert Perrior", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Mr Edward Rudd", "label": "Mr Edward Rudd", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr Renos Savva", "label": "Dr Renos Savva", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Ms Debora Sorby", "label": "Ms Debora Sorby", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr Timo Veromaa", "label": "Dr Timo Veromaa", "shape": "dot", "title": "Companies: DOMAINEX LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr Eric Leigh Mayes", "label": "Dr Eric Leigh Mayes", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Michelangelo Stefani", "label": "Mr Michelangelo Stefani", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr John Mark Brimacombe", "label": "Mr John Mark Brimacombe", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Timothy Charles Bullock", "label": "Mr Timothy Charles Bullock", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr David Scott Cummings", "label": "Mr David Scott Cummings", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Dr Ian Michael Riorden George", "label": "Dr Ian Michael Riorden George", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Dr John Ramon Gonzalez-Carvajal", "label": "Dr John Ramon Gonzalez-Carvajal", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Simon Richard Hattersley", "label": "Mr Simon Richard Hattersley", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Peter Stephen Keen", "label": "Mr Peter Stephen Keen", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr John Knowles", "label": "Mr John Knowles", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Jonathan James Laughton", "label": "Mr Jonathan James Laughton", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "NWV MANAGEMENT LIMITED", "label": "NWV MANAGEMENT LIMITED", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Prof Quentin Andrew Pankhurst", "label": "Prof Quentin Andrew Pankhurst", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Dr Steven Paul Schooling", "label": "Dr Steven Paul Schooling", "shape": "dot", "title": "Companies: ENDOMAGNETICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Professor Syed Abdul Waseh Basit", "label": "Professor Syed Abdul Waseh Basit", "shape": "dot", "title": "Companies: INTRACT PHARMA LIMITED \u003cbr\u003eConnections: 3"}, {"color": "gray", "id": "Dr Vipul Yadav", "label": "Dr Vipul Yadav", "shape": "dot", "title": "Companies: INTRACT PHARMA LIMITED \u003cbr\u003eConnections: 3"}, {"color": "black", "id": "Dr William Pirie Lindsay", "label": "Dr William Pirie Lindsay", "shape": "dot", "title": "Companies: INTRACT PHARMA LIMITED, INTRACT PHARMA LIMITED \u003cbr\u003eConnections: 5"}]);
+                  edges = new vis.DataSet([{"from": "Mr David James Buckeridge", "to": "Mr James Alexander Harrison"}, {"from": "Mr David James Buckeridge", "to": "Mr Duncan Charles McNaught Moore"}, {"from": "Mr David James Buckeridge", "to": "Mr Ross George Reason"}, {"from": "Mr David James Buckeridge", "to": "Mr William John Robinson"}, {"from": "Mr Antony George Cates", "to": "Mr James Alexander Harrison"}, {"from": "Mr Antony George Cates", "to": "Mr Duncan Charles McNaught Moore"}, {"from": "Mr Antony George Cates", "to": "Mr Ross George Reason"}, {"from": "Mr Antony George Cates", "to": "Mr William John Robinson"}, {"from": "Mr James Alexander Harrison", "to": "Mr Duncan Charles McNaught Moore"}, {"from": "Mr James Alexander Harrison", "to": "Mr Ross George Reason"}, {"from": "Mr James Alexander Harrison", "to": "Mr William John Robinson"}, {"from": "Mr James Alexander Harrison", "to": "Dr Alejandra Bruna"}, {"from": "Mr James Alexander Harrison", "to": "Ms Sarah Jean Gowing"}, {"from": "Mr James Alexander Harrison", "to": "Mr Steve McCue"}, {"from": "Mr James Alexander Harrison", "to": "Mr Antonio Benedetti"}, {"from": "Mr James Alexander Harrison", "to": "Mr Allen Lefkowitz"}, {"from": "Mr James Alexander Harrison", "to": "Ms Denise Mary Moody"}, {"from": "Mr James Alexander Harrison", "to": "Professor Syed Abdul Waseh Basit"}, {"from": "Mr James Alexander Harrison", "to": "Dr Keith Powell"}, {"from": "Mr James Alexander Harrison", "to": "Dr Vipul Yadav"}, {"from": "Mr James Alexander Harrison", "to": "Dr William Pirie Lindsay"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Mr Ross George Reason"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Mr William John Robinson"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Dr Alejandra Bruna"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Ms Sarah Jean Gowing"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Mr Steve McCue"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Mr Antonio Benedetti"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Mr Allen Lefkowitz"}, {"from": "Mr Duncan Charles McNaught Moore", "to": "Ms Denise Mary Moody"}, {"from": "Mr Ross George Reason", "to": "Mr William John Robinson"}, {"from": "Mr Ross George Reason", "to": "Dr Alejandra Bruna"}, {"from": "Mr Ross George Reason", "to": "Ms Sarah Jean Gowing"}, {"from": "Mr Ross George Reason", "to": "Mr Steve McCue"}, {"from": "Mr Ross George Reason", "to": "Mr Antonio Benedetti"}, {"from": "Mr Ross George Reason", "to": "Mr Allen Lefkowitz"}, {"from": "Mr Ross George Reason", "to": "Ms Denise Mary Moody"}, {"from": "Mr William John Robinson", "to": "Dr Alejandra Bruna"}, {"from": "Mr William John Robinson", "to": "Ms Sarah Jean Gowing"}, {"from": "Mr William John Robinson", "to": "Mr Steve McCue"}, {"from": "Mr William John Robinson", "to": "Mr Antonio Benedetti"}, {"from": "Mr William John Robinson", "to": "Mr Allen Lefkowitz"}, {"from": "Mr William John Robinson", "to": "Ms Denise Mary Moody"}, {"from": "Mr Thomas Edward Beckett", "to": "Mr Edward Littler"}, {"from": "Mr Thomas Edward Beckett", "to": "Dr Keith Powell"}, {"from": "Mr Thomas Edward Beckett", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Frank Simon Bury", "to": "Mr Edward Littler"}, {"from": "Mr Frank Simon Bury", "to": "Dr Keith Powell"}, {"from": "Mr Frank Simon Bury", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Ralph Stephen Harris", "to": "Mr Edward Littler"}, {"from": "Mr Ralph Stephen Harris", "to": "Dr Keith Powell"}, {"from": "Mr Ralph Stephen Harris", "to": "Dr Stephane Robert George Mery"}, {"from": "Dr Judith Mary Hills", "to": "Mr Edward Littler"}, {"from": "Dr Judith Mary Hills", "to": "Dr Keith Powell"}, {"from": "Dr Judith Mary Hills", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Barry Kenneth Knight", "to": "Mr Edward Littler"}, {"from": "Mr Barry Kenneth Knight", "to": "Dr Keith Powell"}, {"from": "Mr Barry Kenneth Knight", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Edward Littler", "to": "Dr Thomas Haydn Mander"}, {"from": "Mr Edward Littler", "to": "Laurence Pearl"}, {"from": "Mr Edward Littler", "to": "Dr Keith Powell"}, {"from": "Mr Edward Littler", "to": "Mr Anthony David Brampton"}, {"from": "Mr Edward Littler", "to": "Dr Susan Margaret Bright"}, {"from": "Mr Edward Littler", "to": "Mr Christopher David Brown"}, {"from": "Mr Edward Littler", "to": "Mr Ian Fergus Cameron"}, {"from": "Mr Edward Littler", "to": "Dr David Anthony Jones"}, {"from": "Mr Edward Littler", "to": "Mr Edward Littler"}, {"from": "Mr Edward Littler", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Edward Littler", "to": "Professor Salvadore Enrique Moncada"}, {"from": "Mr Edward Littler", "to": "Mr Trevor Robert Perrior"}, {"from": "Mr Edward Littler", "to": "Mr Edward Rudd"}, {"from": "Mr Edward Littler", "to": "Dr Renos Savva"}, {"from": "Mr Edward Littler", "to": "Ms Debora Sorby"}, {"from": "Mr Edward Littler", "to": "Dr Timo Veromaa"}, {"from": "Dr Thomas Haydn Mander", "to": "Dr Keith Powell"}, {"from": "Dr Thomas Haydn Mander", "to": "Dr Stephane Robert George Mery"}, {"from": "Laurence Pearl", "to": "Dr Keith Powell"}, {"from": "Laurence Pearl", "to": "Dr Stephane Robert George Mery"}, {"from": "Dr Keith Powell", "to": "Mr Anthony David Brampton"}, {"from": "Dr Keith Powell", "to": "Dr Susan Margaret Bright"}, {"from": "Dr Keith Powell", "to": "Mr Christopher David Brown"}, {"from": "Dr Keith Powell", "to": "Mr Ian Fergus Cameron"}, {"from": "Dr Keith Powell", "to": "Dr David Anthony Jones"}, {"from": "Dr Keith Powell", "to": "Dr Stephane Robert George Mery"}, {"from": "Dr Keith Powell", "to": "Professor Salvadore Enrique Moncada"}, {"from": "Dr Keith Powell", "to": "Mr Trevor Robert Perrior"}, {"from": "Dr Keith Powell", "to": "Dr Keith Powell"}, {"from": "Dr Keith Powell", "to": "Mr Edward Rudd"}, {"from": "Dr Keith Powell", "to": "Dr Renos Savva"}, {"from": "Dr Keith Powell", "to": "Ms Debora Sorby"}, {"from": "Dr Keith Powell", "to": "Dr Timo Veromaa"}, {"from": "Dr Keith Powell", "to": "Professor Syed Abdul Waseh Basit"}, {"from": "Dr Keith Powell", "to": "Dr Vipul Yadav"}, {"from": "Dr Keith Powell", "to": "Dr William Pirie Lindsay"}, {"from": "Mr Anthony David Brampton", "to": "Dr Stephane Robert George Mery"}, {"from": "Dr Susan Margaret Bright", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Christopher David Brown", "to": "Dr Stephane Robert George Mery"}, {"from": "Mr Ian Fergus Cameron", "to": "Dr Stephane Robert George Mery"}, {"from": "Dr David Anthony Jones", "to": "Dr Stephane Robert George Mery"}, {"from": "Dr Stephane Robert George Mery", "to": "Professor Salvadore Enrique Moncada"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Trevor Robert Perrior"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Edward Rudd"}, {"from": "Dr Stephane Robert George Mery", "to": "Dr Renos Savva"}, {"from": "Dr Stephane Robert George Mery", "to": "Ms Debora Sorby"}, {"from": "Dr Stephane Robert George Mery", "to": "Dr Timo Veromaa"}, {"from": "Dr Stephane Robert George Mery", "to": "Dr Eric Leigh Mayes"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Michelangelo Stefani"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr John Mark Brimacombe"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Timothy Charles Bullock"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr David Scott Cummings"}, {"from": "Dr Stephane Robert George Mery", "to": "Dr Ian Michael Riorden George"}, {"from": "Dr Stephane Robert George Mery", "to": "Dr John Ramon Gonzalez-Carvajal"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Simon Richard Hattersley"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Peter Stephen Keen"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr John Knowles"}, {"from": "Dr Stephane Robert George Mery", "to": "Mr Jonathan James Laughton"}, {"from": "Dr Stephane Robert George Mery", "to": "NWV MANAGEMENT LIMITED"}, {"from": "Dr Stephane Robert George Mery", "to": "Prof Quentin Andrew Pankhurst"}, {"from": "Dr Stephane Robert George Mery", "to": "Dr Steven Paul Schooling"}, {"from": "Professor Syed Abdul Waseh Basit", "to": "Dr William Pirie Lindsay"}, {"from": "Dr Vipul Yadav", "to": "Dr William Pirie Lindsay"}, {"from": "Dr William Pirie Lindsay", "to": "Dr William Pirie Lindsay"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"nodes": {"shape": "dot", "size": 20, "font": {"size": 15}}, "edges": {"width": 0.5}, "physics": {"enabled": true, "barnesHut": {"gravitationalConstant": -20000, "springLength": 100, "springConstant": 0.01, "damping": 0.09}, "minVelocity": 0.75}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

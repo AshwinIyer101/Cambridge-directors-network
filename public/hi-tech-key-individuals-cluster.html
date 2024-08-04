@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 950px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Richard Terence Green", "label": "Mr Richard Terence Green", "shape": "dot", "x": 1050.0, "y": 500.0}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Elaine Elder Loukes", "label": "Dr Elaine Elder Loukes", "shape": "dot", "x": 1029.6045080412896, "y": 648.3882241363633}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Professor Andrew Hopper", "label": "Professor Andrew Hopper", "shape": "dot", "x": 969.9306725005688, "y": 785.7711725194885}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Ms Tania Villares-Balsa", "label": "Ms Tania Villares-Balsa", "shape": "dot", "x": 875.4042287702598, "y": 901.9597803529682}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Thomas David Alexander Pickthorn", "label": "Mr Thomas David Alexander Pickthorn", "shape": "dot", "x": 753.0357707521337, "y": 988.3368701213064}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Hermann Maria Hauser", "label": "Mr Hermann Maria Hauser", "shape": "dot", "x": 611.9008071789486, "y": 1038.4962482252777}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Florin Udrea", "label": "Dr Florin Udrea", "shape": "dot", "x": 462.466672649431, "y": 1048.7178230547966}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Martin John Frost", "label": "Mr Martin John Frost", "shape": "dot", "x": 315.8162133059576, "y": 1018.2435071653513}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Robert Martin Pettigrew", "label": "Mr Robert Martin Pettigrew", "shape": "dot", "x": 182.82582283682308, "y": 949.3334411557432}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Victor Christou", "label": "Dr Victor Christou", "shape": "dot", "x": 73.35879011256918, "y": 847.0983693793291}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Andrew Williamson", "label": "Mr Andrew Williamson", "shape": "dot", "x": -4.466215827999065, "y": 719.1205994154329}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Robert Daniell Sanson", "label": "Mr Robert Daniell Sanson", "shape": "dot", "x": -44.8772703199819, "y": 574.8916570029356}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Gordon Michael Campbell", "label": "Mr Gordon Michael Campbell", "shape": "dot", "x": -44.8772703199819, "y": 425.1083429970645}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Christopher Wayne Gibbs", "label": "Mr Christopher Wayne Gibbs", "shape": "dot", "x": -4.466215827999235, "y": 280.87940058456735}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Simon John Nicholson Kings", "label": "Mr Simon John Nicholson Kings", "shape": "dot", "x": 73.35879011256912, "y": 152.90163062067097}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Simon David Galbraith", "label": "Dr Simon David Galbraith", "shape": "dot", "x": 182.82582283682302, "y": 50.66655884425688}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Michael John Creedon", "label": "Mr Michael John Creedon", "shape": "dot", "x": 315.8162133059575, "y": -18.243507165351275}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Ms Sarah Elizabeth Cole", "label": "Ms Sarah Elizabeth Cole", "shape": "dot", "x": 462.46667264943073, "y": -48.717823054796554}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Jonathan Paul Abell", "label": "Mr Jonathan Paul Abell", "shape": "dot", "x": 611.9008071789483, "y": -38.49624822527767}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Amitabh Sharma", "label": "Mr Amitabh Sharma", "shape": "dot", "x": 753.0357707521334, "y": 11.66312987869344}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Stephen Mark Brown", "label": "Mr Stephen Mark Brown", "shape": "dot", "x": 875.4042287702595, "y": 98.0402196470315}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Dr Colin Richard Smithers", "label": "Dr Colin Richard Smithers", "shape": "dot", "x": 969.9306725005688, "y": 214.22882748051154}, {"color": "#97c2fc", "font": {"color": "black"}, "id": "Mr Jonathan Brett", "label": "Mr Jonathan Brett", "shape": "dot", "x": 1029.6045080412896, "y": 351.6117758636366}]);
+                  edges = new vis.DataSet([{"color": "black", "from": "Mr Richard Terence Green", "to": "Ms Tania Villares-Balsa", "width": 2}, {"color": "orange", "from": "Mr Richard Terence Green", "to": "Professor Andrew Hopper", "width": 2}, {"color": "black", "from": "Mr Richard Terence Green", "to": "Mr Robert Daniell Sanson", "width": 2}, {"color": "orange", "from": "Mr Richard Terence Green", "to": "Mr Gordon Michael Campbell", "width": 2}, {"color": "black", "from": "Mr Richard Terence Green", "to": "Dr Elaine Elder Loukes", "width": 2}, {"color": "black", "from": "Mr Richard Terence Green", "to": "Mr Martin John Frost", "width": 2}, {"color": "black", "from": "Mr Richard Terence Green", "to": "Dr Simon David Galbraith", "width": 2}, {"color": "orange", "from": "Dr Elaine Elder Loukes", "to": "Mr Robert Martin Pettigrew", "width": 2}, {"color": "black", "from": "Dr Elaine Elder Loukes", "to": "Mr Martin John Frost", "width": 2}, {"color": "black", "from": "Professor Andrew Hopper", "to": "Mr Robert Daniell Sanson", "width": 2}, {"color": "orange", "from": "Professor Andrew Hopper", "to": "Mr Gordon Michael Campbell", "width": 2}, {"color": "black", "from": "Professor Andrew Hopper", "to": "Mr Hermann Maria Hauser", "width": 2}, {"color": "black", "from": "Ms Tania Villares-Balsa", "to": "Dr Florin Udrea", "width": 2}, {"color": "red", "from": "Ms Tania Villares-Balsa", "to": "Mr Christopher Wayne Gibbs", "width": 2}, {"color": "black", "from": "Mr Thomas David Alexander Pickthorn", "to": "Dr Florin Udrea", "width": 2}, {"color": "black", "from": "Dr Florin Udrea", "to": "Mr Christopher Wayne Gibbs", "width": 2}, {"color": "black", "from": "Mr Martin John Frost", "to": "Dr Victor Christou", "width": 2}, {"color": "black", "from": "Mr Martin John Frost", "to": "Dr Colin Richard Smithers", "width": 2}, {"color": "black", "from": "Mr Martin John Frost", "to": "Mr Robert Martin Pettigrew", "width": 2}, {"color": "black", "from": "Mr Martin John Frost", "to": "Ms Sarah Elizabeth Cole", "width": 2}, {"color": "black", "from": "Mr Martin John Frost", "to": "Mr Jonathan Brett", "width": 2}, {"color": "black", "from": "Mr Robert Martin Pettigrew", "to": "Ms Sarah Elizabeth Cole", "width": 2}, {"color": "black", "from": "Mr Robert Martin Pettigrew", "to": "Mr Jonathan Brett", "width": 2}, {"color": "red", "from": "Dr Victor Christou", "to": "Mr Andrew Williamson", "width": 2}, {"color": "black", "from": "Dr Victor Christou", "to": "Mr Gordon Michael Campbell", "width": 2}, {"color": "black", "from": "Mr Andrew Williamson", "to": "Mr Gordon Michael Campbell", "width": 2}, {"color": "black", "from": "Mr Robert Daniell Sanson", "to": "Mr Gordon Michael Campbell", "width": 2}, {"color": "red", "from": "Mr Simon John Nicholson Kings", "to": "Ms Sarah Elizabeth Cole", "width": 2}, {"color": "red", "from": "Mr Simon John Nicholson Kings", "to": "Mr Jonathan Brett", "width": 2}, {"color": "red", "from": "Mr Michael John Creedon", "to": "Mr Jonathan Paul Abell", "width": 2}, {"color": "red", "from": "Mr Michael John Creedon", "to": "Mr Amitabh Sharma", "width": 2}, {"color": "red", "from": "Mr Michael John Creedon", "to": "Mr Stephen Mark Brown", "width": 2}, {"color": "red", "from": "Ms Sarah Elizabeth Cole", "to": "Mr Jonathan Brett", "width": 2}, {"color": "red", "from": "Mr Jonathan Paul Abell", "to": "Mr Amitabh Sharma", "width": 2}, {"color": "red", "from": "Mr Jonathan Paul Abell", "to": "Mr Stephen Mark Brown", "width": 2}, {"color": "red", "from": "Mr Amitabh Sharma", "to": "Mr Stephen Mark Brown", "width": 2}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"nodes": {"shape": "dot", "size": 20, "font": {"size": 15}}, "edges": {"smooth": false}, "physics": {"enabled": false}, "layout": {"hierarchical": {"enabled": false}, "improvedLayout": false}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

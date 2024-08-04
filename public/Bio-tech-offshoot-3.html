@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 950px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+<div style="position: absolute; top: 10px; left: 10px; background-color: white; border: 1px solid black; padding: 10px; z-index: 999;">
+  <h4>Legend</h4>
+  <p><span style="background-color: gray; width: 10px; height: 10px; display: inline-block;"></span> 1 Company</p>
+  <p><span style="background-color: black; width: 10px; height: 10px; display: inline-block;"></span> 2 Companies</p>
+  <p><span style="background-color: blue; width: 10px; height: 10px; display: inline-block;"></span> 3 Companies</p>
+  <p><span style="background-color: orange; width: 10px; height: 10px; display: inline-block;"></span> 4 Companies</p>
+  <p><span style="background-color: red; width: 10px; height: 10px; display: inline-block;"></span> 5 Companies</p>
+  <p><span style="background-color: purple; width: 10px; height: 10px; display: inline-block;"></span> 6 Companies</p>
+  <p><span style="background-color: pink; width: 10px; height: 10px; display: inline-block;"></span> More than 6 Companies</p>
+</div>
+
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "gray", "id": "Dr Gustavo Andres Cerda Moya", "label": "Dr Gustavo Andres Cerda Moya", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "ISOSCELES FINANCE LTD", "label": "ISOSCELES FINANCE LTD", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Denis Francis Kinane", "label": "Mr Denis Francis Kinane", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Benjamin Fraser Adam Shaw", "label": "Mr Benjamin Fraser Adam Shaw", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Barrington William Burles", "label": "Mr Barrington William Burles", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Ms Mary Elin Marion Collis", "label": "Ms Mary Elin Marion Collis", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "gray", "id": "Mr Sam Hussain", "label": "Mr Sam Hussain", "shape": "dot", "title": "Companies: CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 1"}, {"color": "black", "id": "Dr William Thomas Mason", "label": "Dr William Thomas Mason", "shape": "dot", "title": "Companies: CAMSTENT LIMITED, CAMBRIDGE MOLECULAR DIAGNOSTICS LTD \u003cbr\u003eConnections: 18"}, {"color": "gray", "id": "Mr David Robert Hampton", "label": "Mr David Robert Hampton", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Mark Harwood", "label": "Mr Mark Harwood", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Christopher David Kingsman", "label": "Mr Christopher David Kingsman", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Bobby Uberoi", "label": "Mr Bobby Uberoi", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Aidan Joseph Byrne", "label": "Mr Aidan Joseph Byrne", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "blue", "id": "Mr Paul Bernard Harper", "label": "Mr Paul Bernard Harper", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC, CAMSTENT LIMITED \u003cbr\u003eConnections: 24"}, {"color": "gray", "id": "Mr Richard Gordon Milne", "label": "Mr Richard Gordon Milne", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Gerhard Anthony Symons", "label": "Mr Gerhard Anthony Symons", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Ms Clare Gillian Twemlow", "label": "Ms Clare Gillian Twemlow", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Paul Morrow White", "label": "Mr Paul Morrow White", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Tobias Adam Wilson Waterworth", "label": "Mr Tobias Adam Wilson Waterworth", "shape": "dot", "title": "Companies: CAMSTENT LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Marek Stefan Gumienny", "label": "Mr Marek Stefan Gumienny", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Dr Christopher Michael Kirton", "label": "Dr Christopher Michael Kirton", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Ms Joanna Smart", "label": "Ms Joanna Smart", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Dr Tim Allsopp", "label": "Dr Tim Allsopp", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Ben Major George Cons", "label": "Mr Ben Major George Cons", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Bradley William Hardiman", "label": "Mr Bradley William Hardiman", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Zickie Hwei Ling Lim", "label": "Zickie Hwei Ling Lim", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Dr Jonathan Simon Milner", "label": "Dr Jonathan Simon Milner", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Thomas David Alexander Pickthorn", "label": "Mr Thomas David Alexander Pickthorn", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Ms Filipa Andreia Contreiras Soares Pinheiro", "label": "Ms Filipa Andreia Contreiras Soares Pinheiro", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Tim Rea", "label": "Mr Tim Rea", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "blue", "id": "Ernesto Giorgio Reggiani", "label": "Ernesto Giorgio Reggiani", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC, DEFINIGEN LIMITED \u003cbr\u003eConnections: 28"}, {"color": "blue", "id": "Dr Alastair James Riddell", "label": "Dr Alastair James Riddell", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC, DEFINIGEN LIMITED \u003cbr\u003eConnections: 28"}, {"color": "gray", "id": "Sir John Stewart Savill", "label": "Sir John Stewart Savill", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Professor Ludovic Vallier", "label": "Professor Ludovic Vallier", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Mr Richard John Willock", "label": "Mr Richard John Willock", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "gray", "id": "Dr Mark Yeo", "label": "Dr Mark Yeo", "shape": "dot", "title": "Companies: DEFINIGEN LIMITED \u003cbr\u003eConnections: 2"}, {"color": "black", "id": "Mr Clive Hedley William Birch", "label": "Mr Clive Hedley William Birch", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "black", "id": "Dr Tim Mitchell", "label": "Dr Tim Mitchell", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "black", "id": "Mr Michael John Owen", "label": "Mr Michael John Owen", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "black", "id": "Dr Stephen Barry Parker", "label": "Dr Stephen Barry Parker", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "black", "id": "Dr John Charles Reader", "label": "Dr John Charles Reader", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "gray", "id": "BROADWAY DIRECTORS LIMITED", "label": "BROADWAY DIRECTORS LIMITED", "shape": "dot", "title": "Companies: SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 10"}, {"color": "gray", "id": "BROADWAY SECRETARIES LIMITED", "label": "BROADWAY SECRETARIES LIMITED", "shape": "dot", "title": "Companies: SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 10"}, {"color": "black", "id": "Dr Alan Gordon Lamont", "label": "Dr Alan Gordon Lamont", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "black", "id": "Mr Edward Morgan Oliver", "label": "Mr Edward Morgan Oliver", "shape": "dot", "title": "Companies: SAREUM LIMITED, SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 13"}, {"color": "gray", "id": "Dr David Hugh Williams", "label": "Dr David Hugh Williams", "shape": "dot", "title": "Companies: SAREUM HOLDINGS PLC \u003cbr\u003eConnections: 10"}, {"color": "gray", "id": "Dr David Williams", "label": "Dr David Williams", "shape": "dot", "title": "Companies: SAREUM LIMITED \u003cbr\u003eConnections: 10"}]);
+                  edges = new vis.DataSet([{"from": "Dr Gustavo Andres Cerda Moya", "to": "Dr William Thomas Mason"}, {"from": "ISOSCELES FINANCE LTD", "to": "Dr William Thomas Mason"}, {"from": "Mr Denis Francis Kinane", "to": "Dr William Thomas Mason"}, {"from": "Mr Benjamin Fraser Adam Shaw", "to": "Dr William Thomas Mason"}, {"from": "Mr Barrington William Burles", "to": "Dr William Thomas Mason"}, {"from": "Ms Mary Elin Marion Collis", "to": "Dr William Thomas Mason"}, {"from": "Mr Sam Hussain", "to": "Dr William Thomas Mason"}, {"from": "Dr William Thomas Mason", "to": "Mr David Robert Hampton"}, {"from": "Dr William Thomas Mason", "to": "Mr Mark Harwood"}, {"from": "Dr William Thomas Mason", "to": "Mr Christopher David Kingsman"}, {"from": "Dr William Thomas Mason", "to": "Mr Bobby Uberoi"}, {"from": "Dr William Thomas Mason", "to": "Mr Aidan Joseph Byrne"}, {"from": "Dr William Thomas Mason", "to": "Mr Paul Bernard Harper"}, {"from": "Dr William Thomas Mason", "to": "Mr Richard Gordon Milne"}, {"from": "Dr William Thomas Mason", "to": "Mr Gerhard Anthony Symons"}, {"from": "Dr William Thomas Mason", "to": "Ms Clare Gillian Twemlow"}, {"from": "Dr William Thomas Mason", "to": "Mr Paul Morrow White"}, {"from": "Dr William Thomas Mason", "to": "Mr Tobias Adam Wilson Waterworth"}, {"from": "Mr David Robert Hampton", "to": "Mr Paul Bernard Harper"}, {"from": "Mr Mark Harwood", "to": "Mr Paul Bernard Harper"}, {"from": "Mr Christopher David Kingsman", "to": "Mr Paul Bernard Harper"}, {"from": "Mr Bobby Uberoi", "to": "Mr Paul Bernard Harper"}, {"from": "Mr Aidan Joseph Byrne", "to": "Mr Paul Bernard Harper"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Richard Gordon Milne"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Gerhard Anthony Symons"}, {"from": "Mr Paul Bernard Harper", "to": "Ms Clare Gillian Twemlow"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Paul Morrow White"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Tobias Adam Wilson Waterworth"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Clive Hedley William Birch"}, {"from": "Mr Paul Bernard Harper", "to": "Dr Tim Mitchell"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Michael John Owen"}, {"from": "Mr Paul Bernard Harper", "to": "Dr Stephen Barry Parker"}, {"from": "Mr Paul Bernard Harper", "to": "Dr John Charles Reader"}, {"from": "Mr Paul Bernard Harper", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Mr Paul Bernard Harper", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Mr Paul Bernard Harper", "to": "Dr Alan Gordon Lamont"}, {"from": "Mr Paul Bernard Harper", "to": "Mr Edward Morgan Oliver"}, {"from": "Mr Paul Bernard Harper", "to": "Ernesto Giorgio Reggiani"}, {"from": "Mr Paul Bernard Harper", "to": "Dr Alastair James Riddell"}, {"from": "Mr Paul Bernard Harper", "to": "Dr David Hugh Williams"}, {"from": "Mr Paul Bernard Harper", "to": "Dr David Williams"}, {"from": "Mr Marek Stefan Gumienny", "to": "Ernesto Giorgio Reggiani"}, {"from": "Mr Marek Stefan Gumienny", "to": "Dr Alastair James Riddell"}, {"from": "Dr Christopher Michael Kirton", "to": "Ernesto Giorgio Reggiani"}, {"from": "Dr Christopher Michael Kirton", "to": "Dr Alastair James Riddell"}, {"from": "Ms Joanna Smart", "to": "Ernesto Giorgio Reggiani"}, {"from": "Ms Joanna Smart", "to": "Dr Alastair James Riddell"}, {"from": "Dr Tim Allsopp", "to": "Ernesto Giorgio Reggiani"}, {"from": "Dr Tim Allsopp", "to": "Dr Alastair James Riddell"}, {"from": "Mr Ben Major George Cons", "to": "Ernesto Giorgio Reggiani"}, {"from": "Mr Ben Major George Cons", "to": "Dr Alastair James Riddell"}, {"from": "Mr Bradley William Hardiman", "to": "Ernesto Giorgio Reggiani"}, {"from": "Mr Bradley William Hardiman", "to": "Dr Alastair James Riddell"}, {"from": "Zickie Hwei Ling Lim", "to": "Ernesto Giorgio Reggiani"}, {"from": "Zickie Hwei Ling Lim", "to": "Dr Alastair James Riddell"}, {"from": "Dr Jonathan Simon Milner", "to": "Ernesto Giorgio Reggiani"}, {"from": "Dr Jonathan Simon Milner", "to": "Dr Alastair James Riddell"}, {"from": "Mr Thomas David Alexander Pickthorn", "to": "Ernesto Giorgio Reggiani"}, {"from": "Mr Thomas David Alexander Pickthorn", "to": "Dr Alastair James Riddell"}, {"from": "Ms Filipa Andreia Contreiras Soares Pinheiro", "to": "Ernesto Giorgio Reggiani"}, {"from": "Ms Filipa Andreia Contreiras Soares Pinheiro", "to": "Dr Alastair James Riddell"}, {"from": "Mr Tim Rea", "to": "Ernesto Giorgio Reggiani"}, {"from": "Mr Tim Rea", "to": "Dr Alastair James Riddell"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr Alastair James Riddell"}, {"from": "Ernesto Giorgio Reggiani", "to": "Sir John Stewart Savill"}, {"from": "Ernesto Giorgio Reggiani", "to": "Professor Ludovic Vallier"}, {"from": "Ernesto Giorgio Reggiani", "to": "Mr Richard John Willock"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr Mark Yeo"}, {"from": "Ernesto Giorgio Reggiani", "to": "Mr Clive Hedley William Birch"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr Tim Mitchell"}, {"from": "Ernesto Giorgio Reggiani", "to": "Mr Michael John Owen"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr Stephen Barry Parker"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr John Charles Reader"}, {"from": "Ernesto Giorgio Reggiani", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Ernesto Giorgio Reggiani", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr Alan Gordon Lamont"}, {"from": "Ernesto Giorgio Reggiani", "to": "Mr Edward Morgan Oliver"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr David Hugh Williams"}, {"from": "Ernesto Giorgio Reggiani", "to": "Dr David Williams"}, {"from": "Dr Alastair James Riddell", "to": "Sir John Stewart Savill"}, {"from": "Dr Alastair James Riddell", "to": "Professor Ludovic Vallier"}, {"from": "Dr Alastair James Riddell", "to": "Mr Richard John Willock"}, {"from": "Dr Alastair James Riddell", "to": "Dr Mark Yeo"}, {"from": "Dr Alastair James Riddell", "to": "Mr Clive Hedley William Birch"}, {"from": "Dr Alastair James Riddell", "to": "Dr Tim Mitchell"}, {"from": "Dr Alastair James Riddell", "to": "Mr Michael John Owen"}, {"from": "Dr Alastair James Riddell", "to": "Dr Stephen Barry Parker"}, {"from": "Dr Alastair James Riddell", "to": "Dr John Charles Reader"}, {"from": "Dr Alastair James Riddell", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Dr Alastair James Riddell", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Dr Alastair James Riddell", "to": "Dr Alan Gordon Lamont"}, {"from": "Dr Alastair James Riddell", "to": "Mr Edward Morgan Oliver"}, {"from": "Dr Alastair James Riddell", "to": "Dr David Hugh Williams"}, {"from": "Dr Alastair James Riddell", "to": "Dr David Williams"}, {"from": "Mr Clive Hedley William Birch", "to": "Dr Tim Mitchell"}, {"from": "Mr Clive Hedley William Birch", "to": "Mr Michael John Owen"}, {"from": "Mr Clive Hedley William Birch", "to": "Dr Stephen Barry Parker"}, {"from": "Mr Clive Hedley William Birch", "to": "Dr John Charles Reader"}, {"from": "Mr Clive Hedley William Birch", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Mr Clive Hedley William Birch", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Mr Clive Hedley William Birch", "to": "Dr Alan Gordon Lamont"}, {"from": "Mr Clive Hedley William Birch", "to": "Mr Edward Morgan Oliver"}, {"from": "Mr Clive Hedley William Birch", "to": "Dr David Hugh Williams"}, {"from": "Mr Clive Hedley William Birch", "to": "Dr David Williams"}, {"from": "Dr Tim Mitchell", "to": "Mr Michael John Owen"}, {"from": "Dr Tim Mitchell", "to": "Dr Stephen Barry Parker"}, {"from": "Dr Tim Mitchell", "to": "Dr John Charles Reader"}, {"from": "Dr Tim Mitchell", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Dr Tim Mitchell", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Dr Tim Mitchell", "to": "Dr Alan Gordon Lamont"}, {"from": "Dr Tim Mitchell", "to": "Mr Edward Morgan Oliver"}, {"from": "Dr Tim Mitchell", "to": "Dr David Hugh Williams"}, {"from": "Dr Tim Mitchell", "to": "Dr David Williams"}, {"from": "Mr Michael John Owen", "to": "Dr Stephen Barry Parker"}, {"from": "Mr Michael John Owen", "to": "Dr John Charles Reader"}, {"from": "Mr Michael John Owen", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Mr Michael John Owen", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Mr Michael John Owen", "to": "Dr Alan Gordon Lamont"}, {"from": "Mr Michael John Owen", "to": "Mr Edward Morgan Oliver"}, {"from": "Mr Michael John Owen", "to": "Dr David Hugh Williams"}, {"from": "Mr Michael John Owen", "to": "Dr David Williams"}, {"from": "Dr Stephen Barry Parker", "to": "Dr John Charles Reader"}, {"from": "Dr Stephen Barry Parker", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Dr Stephen Barry Parker", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Dr Stephen Barry Parker", "to": "Dr Alan Gordon Lamont"}, {"from": "Dr Stephen Barry Parker", "to": "Mr Edward Morgan Oliver"}, {"from": "Dr Stephen Barry Parker", "to": "Dr David Hugh Williams"}, {"from": "Dr Stephen Barry Parker", "to": "Dr David Williams"}, {"from": "Dr John Charles Reader", "to": "BROADWAY DIRECTORS LIMITED"}, {"from": "Dr John Charles Reader", "to": "BROADWAY SECRETARIES LIMITED"}, {"from": "Dr John Charles Reader", "to": "Dr Alan Gordon Lamont"}, {"from": "Dr John Charles Reader", "to": "Mr Edward Morgan Oliver"}, {"from": "Dr John Charles Reader", "to": "Dr David Hugh Williams"}, {"from": "Dr John Charles Reader", "to": "Dr David Williams"}, {"from": "BROADWAY DIRECTORS LIMITED", "to": "Dr Alan Gordon Lamont"}, {"from": "BROADWAY DIRECTORS LIMITED", "to": "Mr Edward Morgan Oliver"}, {"from": "BROADWAY SECRETARIES LIMITED", "to": "Dr Alan Gordon Lamont"}, {"from": "BROADWAY SECRETARIES LIMITED", "to": "Mr Edward Morgan Oliver"}, {"from": "Dr Alan Gordon Lamont", "to": "Mr Edward Morgan Oliver"}, {"from": "Dr Alan Gordon Lamont", "to": "Dr David Hugh Williams"}, {"from": "Dr Alan Gordon Lamont", "to": "Dr David Williams"}, {"from": "Mr Edward Morgan Oliver", "to": "Dr David Hugh Williams"}, {"from": "Mr Edward Morgan Oliver", "to": "Dr David Williams"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"nodes": {"shape": "dot", "size": 20, "font": {"size": 15}}, "edges": {"width": 0.5}, "physics": {"enabled": true, "barnesHut": {"gravitationalConstant": -20000, "springLength": 100, "springConstant": 0.01, "damping": 0.09}, "minVelocity": 0.75}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
